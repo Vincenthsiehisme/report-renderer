@@ -1,8 +1,8 @@
 # Report Data Schema
 
-> **讀取時機**：Phase 7 路徑 B（HTML artifact）執行前，由 `references/phases-4-7.md` 引用。  
-> **用途**：定義截點 JSON（`report_data.json`）的完整資料結構。第一段分析 context 結束後填入，第二段輸出 context 讀入並依此製作報告。  
-> **字體說明**：`visual.fonts` 在 PDF 路徑使用 system font（Georgia、Arial、Palatino 等），HTML 路徑可使用 Google Fonts。  
+> **讀取時機**：需要確認 `report_data.json` 資料結構時讀取；HTML artifact 路徑與驗證階段都可引用。<br>
+> **用途**：定義截點 JSON（`report_data.json`）的完整資料結構。第一段分析 context 結束後填入，第二段輸出 context 讀入並依此製作報告。<br>
+> **字體說明**：`visual.fonts` 在 PDF 路徑使用 system font（Georgia、Arial、Palatino 等），HTML 路徑可使用 Google Fonts。<br>
 > **核心變更（v2.6）**：每個分析單元從「結論填空」改為三欄結構（confirmed / estimated / unknown）；新增 `root_evidence` 頂層區塊承載扎根搜尋結果。
 
 ---
@@ -308,7 +308,7 @@ report_data.json
 
 | 欄位 | 說明 |
 |------|------|
-| `model` | 模型名稱，參照 `references/model-library.md` |
+| `model` | 模型名稱（自由字串，建議沿用上游分析器使用的名稱） |
 | `page` | 放在哪一頁 |
 | `purpose` | 本案應用結論，非模型名稱 |
 
