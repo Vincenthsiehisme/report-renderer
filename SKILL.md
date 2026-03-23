@@ -1,11 +1,11 @@
 ---
 name: report-renderer
-version: "1.0"
+version: "1.1"
 updated: "2026-03-23"
 description: 策略案例報告渲染 skill。輸入 report_data.json，輸出 PDF / HTML artifact / 純文字稿。觸發關鍵字：「渲染」「輸出報告」「產生 PDF」「出 slide」「幫我輸出」「第二段」「render」，或使用者貼入 JSON 內容時。
 ---
 
-# Report Renderer Skill v1.0
+# Report Renderer Skill v1.1
 
 ## 這個 skill 做什麼
 
@@ -101,6 +101,7 @@ JSON 缺欄位就停下來說明，不自行補填。`estimated` 缺少 `proxy` 
 2. 從 `visual.fonts` 取得字體配對
 3. 從 `visual.mood` + 案例調性確認版型節奏和深淺節奏
 4. 為每案確認識別色（從 `output-slide.md` 2.3 節色彩表依序分配，或沿用 JSON 中已定義的）
+5. 依 `references/output-slide.md` 的信心層級規則，確認 `estimated` / `unknown` 的視覺露出位置
 
 視覺決策記錄在來源附錄，不外顯，直接進 Phase 3。
 
@@ -187,6 +188,15 @@ HTML(filename='/home/claude/report_slides.html').write_pdf(
 - **key_unknowns 的知識邊界聲明容易被遺漏**：`conclusion.key_unknowns` 是選填欄位，但存在時必須渲染在結尾頁。這是報告的知識誠實聲明，不是可以省略的附加資訊。
 
 - **routes D 的 estimated 標注格式**：純文字稿沒有視覺標注，estimated 內容用「【初步判讀：[proxy] / [assumption]】」的行內文字格式標注，不能省略。
+
+---
+
+## 文件配套與版本規則
+
+- `SKILL.md` 為此 repo 的流程入口；頁面映射以 `references/render-mapping.md` 為準。
+- Slide 輸出規格以 `references/output-slide.md` 為準；A4 輸出規格以 `references/output-a4.md` 為準。
+- `references/visual-ref.md` 只處理 report-renderer 的視覺決策，不再承接其他 repo 的 Phase 命名。
+- `references/report-data-schema.md` 定義資料結構版本；若 schema 與頁面映射衝突，先修正 schema 與 mapping，再執行渲染。
 
 ---
 
