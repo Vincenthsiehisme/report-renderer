@@ -1,11 +1,11 @@
 ---
 name: report-renderer
-version: "1.1"
+version: "1.2"
 updated: "2026-03-23"
 description: 策略案例報告渲染 skill。輸入 report_data.json，輸出 PDF / HTML artifact / 純文字稿。觸發關鍵字：「渲染」「輸出報告」「產生 PDF」「出 slide」「幫我輸出」「第二段」「render」，或使用者貼入 JSON 內容時。
 ---
 
-# Report Renderer Skill v1.1
+# Report Renderer Skill v1.2
 
 ## 這個 skill 做什麼
 
@@ -13,23 +13,17 @@ description: 策略案例報告渲染 skill。輸入 report_data.json，輸出 P
 
 不分析、不搜尋、不修改 JSON 內容。所有判斷和標注在第一段分析 context（strategy-case-report skill）已完成，本 skill 只負責忠實地把 JSON 映射到視覺輸出。
 
-**配套關係**：
-```
-strategy-case-report skill   →   report_data.json   →   report-renderer skill
-（分析 context）                  （截點）                （輸出 context）
-```
-
 ---
 
 ## 讀取規則
 
-| 時機 | 讀取檔案 |
-|------|---------|
-| Phase 1 驗證前 | `references/render-mapping.md`（驗證規則 + 映射邏輯）|
-| Phase 2 視覺決策前 | `references/visual-ref.md` |
-| Phase 3 路徑 A1 執行前 | `references/output-a4.md` |
-| Phase 3 路徑 A2 執行前 | `references/output-slide.md` |
-| Phase 3 路徑 D 執行前 | `references/plain-text-format.md` |
+| 時機 | 讀取檔案 | 說明 |
+|------|---------|------|
+| Phase 1 驗證前 | `references/render-mapping.md` | 讀一次，全程有效。Phase 3 不重新讀取。|
+| Phase 2 視覺決策前 | `references/visual-ref.md` | |
+| Phase 3 路徑 A1 執行前 | `references/output-a4.md` | render-mapping.md 已在 context，不重載。|
+| Phase 3 路徑 A2 執行前 | `references/output-slide.md` | 同上。|
+| Phase 3 路徑 D 執行前 | `references/plain-text-format.md` | |
 
 **所有 references 僅在對應時機讀取，不預載。**
 
@@ -69,7 +63,7 @@ JSON 缺欄位就停下來說明，不自行補填。`estimated` 缺少 `proxy` 
 
 ### Phase 1｜JSON 驗證
 
-> **執行前讀取 `references/render-mapping.md`**，內含完整驗證規則和錯誤處理邏輯。
+> **執行前讀取 `references/render-mapping.md`**，內含完整驗證規則和錯誤處理邏輯。此檔案全程有效，Phase 3 不重新讀取。
 
 讀入使用者貼入的 JSON，執行以下三項檢查：
 
@@ -93,7 +87,7 @@ JSON 缺欄位就停下來說明，不自行補填。`estimated` 缺少 `proxy` 
 
 ### Phase 2｜視覺決策
 
-> **執行前讀取 `references/visual-ref.md`**。
+> **執行前讀取 `references/visual-ref.md`**。Sprint Mode 只需完成色彩系統與字體配對兩個維度，版型節奏與靜態節奏在 Phase 3 製作時依輸出規格即時決定。
 
 從 JSON 的 `visual.mood` 和案例調性，確認並補充視覺細節：
 
@@ -109,34 +103,19 @@ JSON 缺欄位就停下來說明，不自行補填。`estimated` 缺少 `proxy` 
 
 ### Phase 3｜渲染輸出
 
-> **依輸出媒介讀取對應規格文件**，同時參照 `references/render-mapping.md` 的頁面級別映射規則。
+> **依輸出媒介讀取對應規格文件。`render-mapping.md` 已在 context，不重新讀取。**
+
+---
 
 **路徑 A1｜A4 印刷報告 PDF**
 
-讀取 `references/output-a4.md`。依映射規則逐頁生成 HTML，WeasyPrint 轉換：
-
-```python
-from weasyprint import HTML, CSS
-HTML(filename='/home/claude/report_print.html').write_pdf(
-    '/mnt/user-data/outputs/report.pdf',
-    stylesheets=[CSS(string='@page { size: A4; margin: 18mm 20mm; }')]
-)
-```
+讀取 `references/output-a4.md`。依映射規則逐頁生成 HTML，再依 `output-a4.md` 的轉換規格執行 WeasyPrint 轉換，輸出至 `/mnt/user-data/outputs/report.pdf`。
 
 ---
 
 **路徑 A2｜16:9 簡報 PDF**
 
-讀取 `references/output-slide.md`。依映射規則逐頁生成 HTML，WeasyPrint 轉換：
-
-```python
-from weasyprint import HTML, CSS
-css = CSS(string='@page { size: 338mm 190mm; margin: 0; }')
-HTML(filename='/home/claude/report_slides.html').write_pdf(
-    '/mnt/user-data/outputs/report_slides.pdf',
-    stylesheets=[css]
-)
-```
+讀取 `references/output-slide.md`。依映射規則逐頁生成 HTML，再依 `output-slide.md` **8.1 節**的 WeasyPrint 轉換代碼執行，輸出至 `/mnt/user-data/outputs/report_slides.pdf`。
 
 ---
 

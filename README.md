@@ -1,6 +1,6 @@
 # Report Renderer Skill
 
-**版本：1.1 ｜ 更新：2026-03-23**
+**版本：1.2 ｜ 更新：2026-03-23**
 
 把 `report_data.json` 渲染成指定格式報告的專用 skill。單一職責，不分析，不補填，只渲染。
 
@@ -96,5 +96,6 @@ report-renderer/
 
 | 版本 | 日期 | 主要變更 |
 |------|------|---------|
+| v1.2 | 2026-03-23 | 修正 render-mapping.md 雙重讀取 bug（Phase 1 讀一次，全程有效）；Phase 3 執行說明改為引用 output-slide.md 8.1 節，移除 SKILL.md 內嵌的 WeasyPrint 代碼；補強 Phase 2 Sprint Mode 執行範圍說明；移除開頭重複的配套架構圖。 |
 | v1.1 | 2026-03-23 | 補強文件治理：優化 Slide spec、收斂 visual-ref scope、移除失效引用、統一 report-renderer 內部版本與配套說明。 |
 | v1.0 | 2026-03-23 | 初始版本。三 Phase 流程（驗證 / 視覺決策 / 渲染）；render-mapping.md 定義完整 JSON → 頁面映射規則；三欄狀態渲染規則；Recap 頁扎根強度 icon；結尾頁知識邊界聲明 |
